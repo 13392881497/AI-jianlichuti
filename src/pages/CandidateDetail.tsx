@@ -525,7 +525,7 @@ export default function CandidateDetail() {
   const [interviews, setInterviews] = useState<Interview[]>([
     {
       id: '1',
-      interviewer: '李总监',
+      interviewer: '我的面试',
       round: 3,
       totalRounds: 3,
       type: '视频面试',
@@ -618,22 +618,24 @@ export default function CandidateDetail() {
             {interview.status === 'pending' && (
               <Button type="primary" size="sm">填写评价</Button>
             )}
-            {interview.hasOutline ? (
-              <button
-                onClick={() => setSelectedInterviewId(interview.id)}
-                className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium text-green-600 bg-green-50 hover:bg-green-100 rounded transition-colors"
-              >
-                <FileCheck size={12} />
-                查看面试大纲
-              </button>
-            ) : (
-              <button
-                onClick={() => handleGenerateOutline(interview.id)}
-                className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50 rounded transition-colors"
-              >
-                <Sparkles size={12} />
-                生成面试大纲
-              </button>
+            {interview.interviewer === '我的面试' && (
+              interview.hasOutline ? (
+                <button
+                  onClick={() => setSelectedInterviewId(interview.id)}
+                  className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium text-green-600 bg-green-50 hover:bg-green-100 rounded transition-colors"
+                >
+                  <FileCheck size={12} />
+                  查看面试大纲
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleGenerateOutline(interview.id)}
+                  className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                >
+                  <Sparkles size={12} />
+                  生成面试大纲
+                </button>
+              )
             )}
           </div>
         </div>
