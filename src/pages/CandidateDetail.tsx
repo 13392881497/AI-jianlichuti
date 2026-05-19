@@ -90,256 +90,163 @@ interface Project {
 
 // AI产品经理面试大纲生成
 const generateMockOutline = (round: number): InterviewOutline => {
-  const candidateSummary = {
-    candidateType: 'social' as const,
-    education: '清华大学 · 硕士 · 2021届',
-    workExperience: '3年AI产品经验',
-    experienceType: 'vertical' as const,
-    domains: ['AI产品', '大模型应用', '搜索推荐', '用户增长'],
-    coreSkills: ['产品规划', '数据分析', 'Prompt Engineering', '用户研究', 'AB测试', 'SQL'],
-    overallAssessment: '该候选人拥有3年AI产品经验，专注大模型应用方向。技术背景扎实（计算机硕士），产品思维清晰。简历中亮点突出（DAU增长300%），但需要核实数据真实性和个人贡献度。'
-  };
-
-  const interviewPacing = {
-    totalDuration: 60,
-    phases: [
+  // Tab 1: 摘要
+  const summary = {
+    candidatePositioning: '5年经验的AI产品经理，有大模型应用落地经验，主导过DAU百万级产品增长，技术背景扎实（清华CS硕士）',
+    resumeHighlights: [
       {
-        name: '开场与背景了解',
-        duration: 8,
-        description: '自我介绍 + 职业经历梳理',
-        keyPoints: ['了解候选人职业路径', '确认项目经历真实性', '建立面试氛围']
+        id: 'h1',
+        content: '主导AI助手DAU从100万增长到400万（增长300%）',
+        needsVerification: true,
+        verificationNote: '需核实增长时间周期、具体贡献度'
       },
       {
-        name: '产品能力考察',
-        duration: 20,
-        description: '产品设计 + 数据分析能力',
-        keyPoints: ['需求分析方法论', '数据驱动决策', '用户体验设计']
+        id: 'h2',
+        content: '负责大模型产品架构设计，用户满意度提升40%',
+        needsVerification: false
       },
       {
-        name: 'AI专业能力深挖',
-        duration: 22,
-        description: 'AI产品专业度评估',
-        keyPoints: ['大模型产品经验', 'Prompt Engineering', 'AI伦理与安全', '技术边界理解']
-      },
-      {
-        name: '候选人提问',
-        duration: 10,
-        description: '回答候选人问题',
-        keyPoints: ['介绍团队AI战略', '解答技术/业务疑问']
+        id: 'h3',
+        content: '通过数据分析优化推荐策略，CTR提升25%',
+        needsVerification: false
       }
     ],
-    strategy: '建议重点考察候选人的AI产品落地经验，特别关注大模型应用的实际案例。对于简历中的数据指标（DAU增长300%）需要深入核实，评估候选人对AI技术边界的理解深度。'
+    keyFocusPoints: [
+      'DAU 300%增长无置信区间和归因，建议优先验证数据真实性',
+      '"负责大模型架构"表述模糊，需核实技术深度和具体工作'
+    ],
+    timeAllocation: '建议60分钟，80%时间用在项目深挖与AI专业能力，基础题可砍'
   };
 
-  const suspicions = [
+  // Tab 2: 考察点（按经历分组）
+  const examinationPoints = [
+    // 字节跳动AI助手项目
     {
-      id: 's1',
-      type: 'data_doubt' as const,
-      typeLabel: '数据疑点',
-      content: '简历声称"主导AI助手DAU从100万增长到400万（增长300%）"',
-      description: 'DAU增长300%是非常亮眼的成绩，需要核实增长时间周期、具体贡献度以及增长手段是否可持续。',
-      riskLevel: 'high' as const,
-      verificationSuggestions: [
-        '询问增长时间周期（是3个月还是3年？）',
-        '了解DAU增长的具体手段（投放？自然增长？功能驱动？）',
-        '确认是个人主导还是团队协作，具体负责哪些环节',
-        '询问增长后的留存率变化',
-        '了解是否考虑过增长的成本和ROI'
+      id: 'e1',
+      questionNumber: 'Q1.1',
+      type: 'resume' as const,
+      typeLabel: '🎯 简历追问',
+      relatedExperience: '字节跳动 · AI智能助手',
+      question: '你在简历中提到主导AI助手DAU增长300%，请详细拆解：这个增长是在多长时间内完成的？你具体做了哪些事情？',
+      whyAsk: '对应简历中DAU增长300%的亮点数据，需要验证数据真实性和个人贡献度',
+      goodAnswerCriteria: [
+        '能清晰说明时间周期（如6个月内）',
+        '能区分个人贡献和团队成果',
+        '提到具体的衡量指标（留存率/使用时长等）',
+        '能说明增长手段（功能优化/投放/运营活动）'
+      ],
+      redFlags: [
+        '只说"做了很多优化"但给不出具体措施',
+        '把团队成果全部归功于自己',
+        '用"大概增长了3倍"等模糊表述',
+        '无法说明基本的时间周期'
       ]
     },
     {
-      id: 's2',
-      type: 'vague_description' as const,
-      typeLabel: '描述模糊',
-      content: '"负责大模型产品架构设计"表述不够具体',
-      description: '简历中对AI产品技术架构的描述较为笼统，缺乏对模型选型、工程实现等细节的说明。',
-      riskLevel: 'medium' as const,
-      verificationSuggestions: [
-        '询问具体使用的模型（GPT-4/Claude/自研？）',
-        '了解模型调优和Prompt设计的具体工作',
-        '询问如何处理模型幻觉和安全性问题',
-        '了解技术架构中的难点和解决方案'
+      id: 'e2',
+      questionNumber: 'Q1.2',
+      type: 'resume' as const,
+      typeLabel: '🎯 简历追问',
+      relatedExperience: '字节跳动 · AI智能助手',
+      question: '你提到负责大模型产品架构设计，请具体说明：选择了什么模型？为什么选择这个模型？Prompt设计上有哪些经验？',
+      whyAsk: '简历中"负责大模型架构"表述模糊，需核实技术深度和具体工作',
+      goodAnswerCriteria: [
+        '能清晰说明模型选型理由（成本/效果/延迟的权衡）',
+        '能给出具体的Prompt优化案例',
+        '了解不同模型的优缺点对比',
+        '能说明模型评估体系'
+      ],
+      redFlags: [
+        '只说"用了GPT"但给不出版本和选型理由',
+        'Prompt设计缺乏系统性',
+        '对模型基本概念不清楚',
+        '无法说明技术架构难点'
       ]
     },
     {
-      id: 's3',
-      type: 'career_change' as const,
-      typeLabel: '职业变动疑点',
-      content: '2年内从搜索产品转AI产品，声称"主导3个AI项目"',
-      description: '转型时间较短但项目经验丰富，需要核实AI产品经验的深度和真实性。',
-      riskLevel: 'medium' as const,
-      verificationSuggestions: [
-        '询问转型AI产品的学习路径和方法',
-        '了解3个AI项目的具体类型和复杂度',
-        '询问在AI项目中遇到的最大技术挑战',
-        '评估对AI技术发展的持续关注度'
+      id: 'e3',
+      questionNumber: 'Q1.3',
+      type: 'resume' as const,
+      typeLabel: '🎯 简历追问',
+      relatedExperience: '字节跳动 · AI智能助手',
+      question: 'AI产品经常面临幻觉问题，你在项目中是如何处理的？效果如何？',
+      whyAsk: '考察候选人对AI产品核心挑战的理解和解决方案',
+      goodAnswerCriteria: [
+        '能系统性地说明多种应对手段（RAG/事实核查/置信度阈值）',
+        '能给出具体的效果数据',
+        '能权衡准确率和用户体验',
+        '了解最新的研究方向'
+      ],
+      redFlags: [
+        '只说"加了人工审核"缺乏系统性思考',
+        '不知道什么是幻觉',
+        '认为幻觉无法解决只能接受',
+        '解决方案明显不合理'
       ]
-    }
-  ];
-
-  const questionBank = [
+    },
+    // 百度搜索项目
     {
-      id: 'c1',
-      dimension: '产品基础能力',
-      required: true,
-      priority: 1,
-      questions: [
-        {
-          id: 'q1',
-          mainQuestion: '你在简历中提到主导AI助手DAU增长300%，请详细拆解一下：这个增长是在多长时间内完成的？你具体做了哪些事情？如何衡量你的贡献？',
-          examinePurpose: '验证数据真实性，考察候选人的产品方法论和数据驱动思维',
-          followUpFramework: {
-            goodSignals: {
-              description: '能清晰说明时间周期、增长手段（如功能优化/投放/运营活动），能区分个人贡献和团队成果，提到具体的衡量指标（留存率/使用时长等）',
-              followUpDirection: '深挖：追问 "如果让你再做一次，你会在哪些方面做得不同？增长过程中最大的失误是什么？"'
-            },
-            vagueSignals: {
-              description: '只说"做了很多优化"但给不出具体措施，或把团队成果全部归功于自己，用"大概增长了3倍"等模糊表述',
-              followUpDirection: '逼出细节：追问 "具体是哪个功能带来了最大增长？增长了多少？花了多长时间？"'
-            },
-            unableSignals: {
-              description: '无法说明基本的时间周期，或增长数据前后矛盾，明显缺乏实际经验',
-              followUpDirection: '降级：改为问 "那你介绍一下你最熟悉的一个产品功能，你是怎么设计的？"'
-            }
-          },
-          excellentAnswerReference: '能给出清晰的增长曲线和时间节点，详细说明A/B测试过程和结果，主动提及增长的成本和ROI，能反思哪些增长手段是可持续的，哪些是短期红利',
-          isHighlighted: true,
-          order: 1
-        },
-        {
-          id: 'q2',
-          mainQuestion: '假设我们要为这款面试助手产品增加一个AI模拟面试功能，你会如何设计？请从需求分析、功能设计、效果评估三个维度说明。',
-          examinePurpose: '考察产品设计完整性和结构化思维能力',
-          followUpFramework: {
-            goodSignals: {
-              description: '能系统性地从用户需求出发（候选人/面试官/HR不同角色），给出完整的功能架构和评估指标',
-              followUpDirection: '深挖：追问 "如果技术资源有限，你会优先做哪个功能？为什么？"'
-            },
-            vagueSignals: {
-              description: '直接进入功能设计，缺乏需求分析，或功能设计零散缺乏逻辑',
-              followUpDirection: '逼出细节：追问 "这个功能解决什么用户的什么问题？你调研过吗？"'
-            },
-            unableSignals: {
-              description: '无法给出基本的产品设计框架，或设计与AI能力明显不匹配',
-              followUpDirection: '降级：改为问 "你觉得一个好的AI产品应该具备哪些特征？"'
-            }
-          },
-          excellentAnswerReference: '能清晰区分不同用户角色的需求，给出MVP版本和完整版的 roadmap，设计包含Prompt模板、评分维度、反馈机制等细节，评估指标包含准确率、用户满意度、复用率等多维度',
-          isHighlighted: false,
-          order: 2
-        }
+      id: 'e4',
+      questionNumber: 'Q2.1',
+      type: 'resume' as const,
+      typeLabel: '🎯 简历追问',
+      relatedExperience: '百度 · 搜索产品经理',
+      question: '你提到优化搜索推荐策略CTR提升25%，请详细说明：用了什么数据？发现了什么问题？怎么优化的？',
+      whyAsk: '验证数据分析能力和方法论，考察数据驱动决策能力',
+      goodAnswerCriteria: [
+        '能清晰说明数据指标（CTR/曝光/点击）',
+        '能说明分析过程（漏斗分析/用户分群）',
+        '提到A/B测试验证',
+        '能反思分析中的局限性'
+      ],
+      redFlags: [
+        '只说"分析了数据做了优化"但给不出具体指标',
+        '混淆相关性和因果性',
+        '无法说明基本的数据分析方法',
+        '缺乏数据敏感度'
+      ]
+    },
+    // 岗位必考
+    {
+      id: 'e5',
+      questionNumber: 'Q3.1',
+      type: 'required' as const,
+      typeLabel: '📋 岗位必考',
+      requiredModule: '产品设计能力',
+      question: '假设我们要为这款面试助手产品增加AI模拟面试功能，你会如何设计？从需求分析、功能设计、效果评估三个维度说明。',
+      whyAsk: '考察产品设计完整性和结构化思维能力，属于AI产品经理岗位必考能力',
+      goodAnswerCriteria: [
+        '能系统性地从用户需求出发',
+        '给出完整的功能架构和评估指标',
+        '能区分MVP和完整版',
+        '设计包含技术实现细节'
+      ],
+      redFlags: [
+        '直接进入功能设计，缺乏需求分析',
+        '功能设计零散缺乏逻辑',
+        '设计与AI能力明显不匹配',
+        '无法给出基本的产品设计框架'
       ]
     },
     {
-      id: 'c2',
-      dimension: 'AI专业能力',
-      required: true,
-      priority: 2,
-      questions: [
-        {
-          id: 'q3',
-          mainQuestion: '你提到负责大模型产品架构设计，请具体说明：你们选择了什么模型？为什么选择这个模型？在Prompt设计上有哪些经验？',
-          examinePurpose: '考察候选人对大模型技术的理解深度和实际落地经验',
-          followUpFramework: {
-            goodSignals: {
-              description: '能清晰说明模型选型理由（成本/效果/延迟的权衡），能给出具体的Prompt优化案例和效果对比',
-              followUpDirection: '深挖：追问 "模型幻觉问题你们是怎么处理的？有没有遇到过安全合规问题？"'
-            },
-            vagueSignals: {
-              description: '只说"用了GPT"但给不出版本和选型理由，Prompt设计缺乏系统性',
-              followUpDirection: '逼出细节：追问 "你们用的是GPT-3.5还是GPT-4？API成本大概多少？怎么优化的？"'
-            },
-            unableSignals: {
-              description: '对模型基本概念不清楚（如分不清GPT和BERT），或Prompt设计明显不合理',
-              followUpDirection: '降级：改为问 "你觉得大模型产品和小模型产品有什么区别？"'
-            }
-          },
-          excellentAnswerReference: '能详细对比不同模型的优缺点（GPT-4 vs Claude vs 文心一言），给出Prompt工程的最佳实践（Few-shot/CoT/角色设定），主动提及模型评估体系（人工评估+自动评估）',
-          isHighlighted: true,
-          order: 1
-        },
-        {
-          id: 'q4',
-          mainQuestion: 'AI产品经常面临幻觉（Hallucination）问题，你在之前的项目中是如何处理这个问题的？效果如何？',
-          examinePurpose: '考察候选人对AI产品核心挑战的理解和解决方案',
-          followUpFramework: {
-            goodSignals: {
-              description: '能系统性地说明多种应对手段（RAG/事实核查/置信度阈值/人工审核），并能给出具体的效果数据',
-              followUpDirection: '深挖：追问 "这些方法各自的优缺点是什么？在什么场景下选择哪种方案？"'
-            },
-            vagueSignals: {
-              description: '只说"加了人工审核"或"优化了Prompt"，缺乏系统性思考',
-              followUpDirection: '逼出细节：追问 "具体怎么做的？减少了多少幻觉？对用户体验有什么影响？"'
-            },
-            unableSignals: {
-              description: '不知道什么是幻觉，或认为幻觉无法解决只能接受',
-              followUpDirection: '降级：改为问 "你觉得AI产品最大的技术限制是什么？"'
-            }
-          },
-          excellentAnswerReference: '能给出分层的解决方案（技术层：RAG/微调；产品层：置信度提示/人工反馈；运营层：审核机制），能权衡准确率和用户体验，主动提及最新的研究方向（如Self-RAG）',
-          isHighlighted: false,
-          order: 2
-        }
-      ]
-    },
-    {
-      id: 'c3',
-      dimension: '数据与增长',
-      required: true,
-      priority: 3,
-      questions: [
-        {
-          id: 'q5',
-          mainQuestion: '你简历中提到"通过数据分析优化推荐策略，CTR提升25%"，请详细说明：你用了什么数据？发现了什么问题？怎么优化的？',
-          examinePurpose: '考察数据驱动决策能力和分析方法论',
-          followUpFramework: {
-            goodSignals: {
-              description: '能清晰说明数据指标（CTR/曝光/点击）、分析过程（漏斗分析/用户分群）、优化手段（算法调优/UI调整）和验证方式（A/B测试）',
-              followUpDirection: '深挖：追问 "这个提升是统计显著的吗？样本量多大？持续了多久？"'
-            },
-            vagueSignals: {
-              description: '只说"分析了数据做了优化"但给不出具体指标和方法，缺乏数据敏感度',
-              followUpDirection: '逼出细节：追问 "具体看了哪些指标？用什么工具分析的？优化前后数据对比是多少？"'
-            },
-            unableSignals: {
-              description: '无法说明基本的数据分析方法，或混淆相关性和因果性',
-              followUpDirection: '降级：改为问 "你觉得产品数据分析最重要的是什么？"'
-            }
-          },
-          excellentAnswerReference: '能给出完整的分析框架（问题发现→假设提出→实验设计→结果验证），主动提及统计显著性检验，能反思分析中的局限性和改进空间',
-          isHighlighted: true,
-          order: 1
-        }
-      ]
-    },
-    {
-      id: 'c4',
-      dimension: '简历疑点核实',
-      required: true,
-      priority: 4,
-      questions: [
-        {
-          id: 'q6',
-          mainQuestion: '你从搜索产品转型AI产品只有2年时间，但简历上写了主导3个AI项目。能介绍一下这3个项目分别是什么？你在其中遇到的最大技术挑战是什么？',
-          examinePurpose: '核实AI产品经验的真实性和深度',
-          followUpFramework: {
-            goodSignals: {
-              description: '能清晰说明3个项目的类型、复杂度、个人角色，能具体描述技术挑战（如模型选型/效果调优/工程落地）',
-              followUpDirection: '深挖：追问 "如果让你重新做这3个项目，你会在哪些方面做得不同？"'
-            },
-            vagueSignals: {
-              description: '3个项目描述雷同，无法区分复杂度，或技术挑战描述空泛',
-              followUpDirection: '逼出细节：追问 "这3个项目中哪个技术难度最大？具体难在哪里？你怎么解决的？"'
-            },
-            unableSignals: {
-              description: '无法说清楚3个项目的区别，或明显夸大项目复杂度',
-              followUpDirection: '降级：改为问 "你转型AI产品后，最大的学习收获是什么？"'
-            }
-          },
-          excellentAnswerReference: '能给出3个差异化明显的项目（如对话系统/内容生成/推荐优化），详细描述技术挑战和解决方案，能反思转型过程中的认知变化',
-          isHighlighted: true,
-          order: 1
-        }
+      id: 'e6',
+      questionNumber: 'Q3.2',
+      type: 'required' as const,
+      typeLabel: '📋 岗位必考',
+      requiredModule: 'AI技术理解',
+      question: '你认为大模型产品和小模型产品有什么区别？在选型时会考虑哪些因素？',
+      whyAsk: '考察候选人对AI技术的理解深度，以及技术选型的决策能力',
+      goodAnswerCriteria: [
+        '能清晰对比两者的适用场景',
+        '能从成本/效果/延迟等多维度分析',
+        '能给出具体的选型案例',
+        '了解技术发展趋势'
+      ],
+      redFlags: [
+        '分不清大模型和小模型的区别',
+        '选型理由缺乏逻辑',
+        '对技术边界理解模糊',
+        '无法给出实际案例'
       ]
     }
   ];
@@ -348,10 +255,8 @@ const generateMockOutline = (round: number): InterviewOutline => {
     id: `outline-${Date.now()}`,
     interviewId: '',
     status: 'generated',
-    candidateSummary,
-    interviewPacing,
-    suspicions,
-    questionBank,
+    summary,
+    examinationPoints,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };

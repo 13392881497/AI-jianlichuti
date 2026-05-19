@@ -4,114 +4,56 @@ export interface InterviewOutline {
   id: string;
   interviewId: string;
   status: 'generating' | 'generated' | 'edited';
-  // 候选人摘要
-  candidateSummary: CandidateSummary;
-  // 面试节奏建议
-  interviewPacing: InterviewPacing;
-  // 疑点分析
-  suspicions: SuspicionAnalysis[];
-  // 问题库
-  questionBank: QuestionCategory[];
+  // Tab 1: 摘要
+  summary: InterviewSummary;
+  // Tab 2: 考察点
+  examinationPoints: ExaminationPoint[];
   createdAt: string;
   updatedAt: string;
 }
 
-// 候选人摘要
-export interface CandidateSummary {
-  // 候选人类型：应届生/社招
-  candidateType: 'campus' | 'social';
-  // 教育背景
-  education: string;
-  // 工作年限
-  workExperience: string;
-  // 经验类型：垂直/发散
-  experienceType: 'vertical' | 'divergent';
-  // 涉及领域
-  domains: string[];
-  // 核心技能栈
-  coreSkills: string[];
-  // 综合评价
-  overallAssessment: string;
+// Tab 1: 面试摘要
+export interface InterviewSummary {
+  // 候选人定位：一句话概括
+  candidatePositioning: string;
+  // 简历亮点：3条最值得肯定的事
+  resumeHighlights: ResumeHighlight[];
+  // 本次面试该死磕的点：1-2条基于可疑点的追问优先级
+  keyFocusPoints: string[];
+  // 建议时长分配
+  timeAllocation: string;
 }
 
-// 面试节奏建议
-export interface InterviewPacing {
-  // 总时长
-  totalDuration: number;
-  // 各阶段时间分配
-  phases: InterviewPhase[];
-  // 整体策略建议
-  strategy: string;
-}
-
-export interface InterviewPhase {
-  name: string;
-  duration: number;
-  description: string;
-  keyPoints: string[];
-}
-
-// 疑点分析
-export interface SuspicionAnalysis {
+export interface ResumeHighlight {
   id: string;
-  // 疑点类型：空窗期/数据疑点/职业变换/经历断层/描述模糊
-  type: 'gap' | 'data_doubt' | 'career_change' | 'experience_gap' | 'vague_description';
-  typeLabel: string;
-  // 疑点内容
   content: string;
-  // 详细描述
-  description: string;
-  // 风险等级
-  riskLevel: 'high' | 'medium' | 'low';
-  // 核实建议
-  verificationSuggestions: string[];
+  // 是否需要核实
+  needsVerification: boolean;
+  // 核实提示（如果需要）
+  verificationNote?: string;
 }
 
-// 问题库分类
-export interface QuestionCategory {
+// Tab 2: 考察点
+export interface ExaminationPoint {
   id: string;
-  // 考察维度名称
-  dimension: string;
-  // 是否必问
-  required: boolean;
-  // 优先级
-  priority: number;
-  // 问题列表
-  questions: InterviewQuestion[];
-}
-
-export interface InterviewQuestion {
-  id: string;
-  // 主问题（基于简历定制）
-  mainQuestion: string;
-  // 考察目的
-  examinePurpose: string;
-  // 追问决策框架
-  followUpFramework: FollowUpFramework;
-  // 优秀回答参考
-  excellentAnswerReference: string;
-  // 是否标记为重点
-  isHighlighted: boolean;
-  order: number;
-}
-
-// 追问决策框架
-export interface FollowUpFramework {
-  // 答得好的信号
-  goodSignals: {
-    description: string;
-    followUpDirection: string;
-  };
-  // 答得泛的信号
-  vagueSignals: {
-    description: string;
-    followUpDirection: string;
-  };
-  // 答不上来的信号
-  unableSignals: {
-    description: string;
-    followUpDirection: string;
-  };
+  // 题目编号：如 Q1.1, Q1.2
+  questionNumber: string;
+  // 题目类型标签
+  type: 'resume' | 'required';
+  // 类型标签显示文本
+  typeLabel: string;
+  // 关联经历（如果是简历追问）
+  relatedExperience?: string;
+  // 必考模块（如果是岗位必考）
+  requiredModule?: string;
+  // 题目本身
+  question: string;
+  // 为什么问
+  whyAsk: string;
+  // 好的回答标准
+  goodAnswerCriteria: string[];
+  // 注水信号（答得不好的表现）
+  redFlags: string[];
 }
 
 export interface Interview {
