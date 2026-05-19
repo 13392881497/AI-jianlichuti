@@ -118,8 +118,8 @@ const generateMockOutline = (round: number): InterviewOutline => {
     timeAllocation: '建议60分钟，80%时间用在项目深挖与AI专业能力，基础题可砍'
   };
 
-  // Tab 2: 考察点（按经历分组）
-  const examinationPoints = [
+  // Tab 2: 推荐考察问题（按经历分组）
+  const recommendedQuestions = [
     // 字节跳动AI助手项目
     {
       id: 'e1',
@@ -140,6 +140,11 @@ const generateMockOutline = (round: number): InterviewOutline => {
         '把团队成果全部归功于自己',
         '用"大概增长了3倍"等模糊表述',
         '无法说明基本的时间周期'
+      ],
+      tags: [
+        { id: 't1', label: '坦诚清晰', color: 'blue' as const },
+        { id: 't2', label: '数据驱动', color: 'green' as const },
+        { id: 't3', label: '用户增长', color: 'orange' as const }
       ]
     },
     {
@@ -161,6 +166,11 @@ const generateMockOutline = (round: number): InterviewOutline => {
         'Prompt设计缺乏系统性',
         '对模型基本概念不清楚',
         '无法说明技术架构难点'
+      ],
+      tags: [
+        { id: 't4', label: '大模型架构', color: 'purple' as const },
+        { id: 't5', label: '技术深度', color: 'blue' as const },
+        { id: 't6', label: '坦诚清晰', color: 'blue' as const }
       ]
     },
     {
@@ -182,6 +192,10 @@ const generateMockOutline = (round: number): InterviewOutline => {
         '不知道什么是幻觉',
         '认为幻觉无法解决只能接受',
         '解决方案明显不合理'
+      ],
+      tags: [
+        { id: 't7', label: 'AI专业能力', color: 'purple' as const },
+        { id: 't8', label: '问题解决', color: 'green' as const }
       ]
     },
     // 百度搜索项目
@@ -204,6 +218,11 @@ const generateMockOutline = (round: number): InterviewOutline => {
         '混淆相关性和因果性',
         '无法说明基本的数据分析方法',
         '缺乏数据敏感度'
+      ],
+      tags: [
+        { id: 't9', label: '数据分析', color: 'green' as const },
+        { id: 't10', label: '数据驱动', color: 'green' as const },
+        { id: 't11', label: '坦诚清晰', color: 'blue' as const }
       ]
     },
     // 岗位必考
@@ -226,6 +245,11 @@ const generateMockOutline = (round: number): InterviewOutline => {
         '功能设计零散缺乏逻辑',
         '设计与AI能力明显不匹配',
         '无法给出基本的产品设计框架'
+      ],
+      tags: [
+        { id: 't12', label: '产品设计', color: 'orange' as const },
+        { id: 't13', label: '结构化思维', color: 'blue' as const },
+        { id: 't14', label: '始终创业', color: 'red' as const }
       ]
     },
     {
@@ -247,6 +271,11 @@ const generateMockOutline = (round: number): InterviewOutline => {
         '选型理由缺乏逻辑',
         '对技术边界理解模糊',
         '无法给出实际案例'
+      ],
+      tags: [
+        { id: 't15', label: 'AI技术', color: 'purple' as const },
+        { id: 't16', label: '技术选型', color: 'blue' as const },
+        { id: 't17', label: '多元兼容', color: 'gray' as const }
       ]
     }
   ];
@@ -256,7 +285,7 @@ const generateMockOutline = (round: number): InterviewOutline => {
     interviewId: '',
     status: 'generated',
     summary,
-    examinationPoints,
+    recommendedQuestions,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };

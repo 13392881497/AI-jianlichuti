@@ -16,10 +16,9 @@ import {
   MoreHorizontal,
   ArrowRightLeft,
   Plus,
-  Trash2,
   Star
 } from 'lucide-react';
-import type { InterviewOutline, ExaminationPoint } from '@/types/interview';
+import type { InterviewOutline, RecommendedQuestion, QuestionTag } from '@/types/interview';
 
 interface InterviewOutlinePanelProps {
   interviewId: string;
@@ -41,7 +40,7 @@ export default function InterviewOutlinePanel({
   onUpdateOutline
 }: InterviewOutlinePanelProps) {
   const [customInput, setCustomInput] = useState('');
-  const [activeTab, setActiveTab] = useState<'summary' | 'examination'>('summary');
+  const [activeTab, setActiveTab] = useState<'summary' | 'questions'>('summary');
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
 
   const toggleGroup = (groupId: string) => {
@@ -52,30 +51,40 @@ export default function InterviewOutlinePanel({
     );
   };
 
-  // 按经历分组组织考察点
-  const groupExaminationPoints = (points: ExaminationPoint[]) => {
-    const groups: { [key: string]: ExaminationPoint[] } = {};
-    points.forEach(point => {
-      const key = point.relatedExperience || '岗位必考';
+  // 按经历分组组织问题
+  const groupQuestions = (questions: RecommendedQuestion[]) => {
+    const groups: { [key: string]: RecommendedQuestion[] } = {};
+    questions.forEach(q => {
+      const key = q.relatedExperience || '岗位必考';
       if (!groups[key]) groups[key] = [];
-      groups[key].push(point);
+      groups[key].push(q);
     });
     return groups;
   };
 
-  const handleRegenerateQuestion = (pointId: string) => {
-    // TODO: 调用API重新生成单个问题
-    console.log('重新生成问题:', pointId);
+  // 获取标签颜色样式
+  const getTagColorClass = (color: QuestionTag['color']) => {
+    const colorMap = {
+      blue: 'bg-blue-100 text-blue-700',
+      green: 'bg-green-100 text-green-700',
+      orange: 'bg-orange-100 text-orange-700',
+      purple: 'bg-purple-100 text-purple-700',
+      red: 'bg-red-100 text-red-700',
+      gray: 'bg-gray-100 text-gray-700'
+    };
+    return colorMap[color];
   };
 
-  const handleAdjustDifficulty = (pointId: string, direction: 'harder' | 'easier') => {
-    // TODO: 调用API调整难度
-    console.log('调整难度:', pointId, direction);
+  const handleRegenerateQuestion = (questionId: string) => {
+    console.log('重新生成问题:', questionId);
   };
 
-  const handleAddFollowUp = (pointId: string) => {
-    // TODO: 添加追问
-    console.log('添加追问:', pointId);
+  const handleAdjustDifficulty = (questionId: string, direction: 'harder' | 'easier') => {
+    console.log('调整难度:', questionId, direction);
+  };
+
+  const handleAddFollowUp = (questionId: string) => {
+    console.log('添加追问:', questionId);
   };
 
   if (isGenerating) {
@@ -117,7 +126,7 @@ export default function InterviewOutlinePanel({
     );
   }
 
-  const examinationGroups = groupExaminationPoints(outline.examinationPoints);
+  const questionGroups = groupQuestions(outline.recommendedQuestions);
 
   return (
     <div className="h-full flex flex-col">
@@ -159,7 +168,7 @@ export default function InterviewOutlinePanel({
       <div className="flex border-b border-gray-200 bg-white">
         {[
           { key: 'summary', label: '摘要', icon: FileText },
-          { key: 'examination', label: `考察点(${outline.examinationPoints.length})`, icon: Target }
+          { key: 'questions', label: `推荐考察问题(${outline.recommendedQuestions.length})`, icon: Target }
         ].map(tab => (
           <button
             key={tab.key}
@@ -245,10 +254,10 @@ export default function InterviewOutlinePanel({
           </div>
         )}
 
-        {/* Tab 2: 考察点 */}
-        {activeTab === 'examination' && (
+        {/* Tab 2: 推荐考察问题 */}
+        {activeTab === 'questions' && (
           <div className="p-3 space-y-3">
-            {Object.entries(examinationGroups).map(([groupName, points]) => (
+            {Object.entries(questionGroups).map(([groupName, questions]) => (
               <div key={groupName} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 {/* 经历/模块标题 */}
                 <button
@@ -263,44 +272,54 @@ export default function InterviewOutlinePanel({
                     )}
                     <span className="text-sm font-medium text-gray-900">{groupName}</span>
                   </div>
-                  <span className="text-xs text-gray-500">{points.length} 题</span>
+                  <span className="text-xs text-gray-500">{questions.length} 题</span>
                 </button>
 
                 {/* 问题列表 */}
                 {expandedGroups.includes(groupName) && (
                   <div className="divide-y divide-gray-100">
-                    {points.map((point) => (
-                      <div key={point.id} className="p-3">
+                    {questions.map((q) => (
+                      <div key={q.id} className="p-3">
                         {/* 问题头部 */}
                         <div className="flex items-start gap-2 mb-2">
                           <span className="text-xs font-medium text-gray-500 mt-0.5">
-                            {point.questionNumber}
+                            {q.questionNumber}
                           </span>
                           <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
+                            {/* 类型标签 + 能力标签 */}
+                            <div className="flex flex-wrap items-center gap-1.5 mb-2">
                               <span className={`px-1.5 py-0.5 text-xs rounded ${
-                                point.type === 'resume' 
+                                q.type === 'resume' 
                                   ? 'bg-blue-100 text-blue-600' 
                                   : 'bg-purple-100 text-purple-600'
                               }`}>
-                                {point.typeLabel}
+                                {q.typeLabel}
                               </span>
+                              {/* 能力/素质标签 */}
+                              {q.tags.map((tag) => (
+                                <span
+                                  key={tag.id}
+                                  className={`px-1.5 py-0.5 text-xs rounded ${getTagColorClass(tag.color)}`}
+                                >
+                                  {tag.label}
+                                </span>
+                              ))}
                             </div>
                             <p className="text-sm font-medium text-gray-900 leading-relaxed">
-                              {point.question}
+                              {q.question}
                             </p>
                           </div>
                           {/* 题级操作按钮 */}
                           <div className="flex items-center gap-1">
                             <button
-                              onClick={() => handleRegenerateQuestion(point.id)}
+                              onClick={() => handleRegenerateQuestion(q.id)}
                               className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
                               title="换一题"
                             >
                               <ArrowRightLeft className="w-3.5 h-3.5" />
                             </button>
                             <button
-                              onClick={() => handleAdjustDifficulty(point.id, 'harder')}
+                              onClick={() => handleAdjustDifficulty(q.id, 'harder')}
                               className="p-1 text-gray-400 hover:text-orange-600 transition-colors"
                               title="更难"
                             >
@@ -312,7 +331,7 @@ export default function InterviewOutlinePanel({
                         {/* 为什么问 */}
                         <div className="ml-6 mb-2 bg-gray-50 rounded p-2">
                           <span className="text-xs font-medium text-gray-600">为什么问：</span>
-                          <span className="text-xs text-gray-700 ml-1">{point.whyAsk}</span>
+                          <span className="text-xs text-gray-700 ml-1">{q.whyAsk}</span>
                         </div>
 
                         {/* 好的回答标准 */}
@@ -322,7 +341,7 @@ export default function InterviewOutlinePanel({
                             <span className="text-xs font-medium text-green-700">好的回答</span>
                           </div>
                           <ul className="space-y-1">
-                            {point.goodAnswerCriteria.map((criteria, i) => (
+                            {q.goodAnswerCriteria.map((criteria, i) => (
                               <li key={i} className="text-xs text-gray-600 flex items-start gap-1">
                                 <span className="text-green-500">•</span>
                                 {criteria}
@@ -338,7 +357,7 @@ export default function InterviewOutlinePanel({
                             <span className="text-xs font-medium text-red-600">注水信号</span>
                           </div>
                           <ul className="space-y-1">
-                            {point.redFlags.map((flag, i) => (
+                            {q.redFlags.map((flag, i) => (
                               <li key={i} className="text-xs text-gray-600 flex items-start gap-1">
                                 <span className="text-red-400">•</span>
                                 {flag}
@@ -350,14 +369,14 @@ export default function InterviewOutlinePanel({
                         {/* 追问按钮 */}
                         <div className="ml-6 flex gap-2">
                           <button
-                            onClick={() => handleAddFollowUp(point.id)}
+                            onClick={() => handleAddFollowUp(q.id)}
                             className="flex items-center gap-1 px-2 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded transition-colors"
                           >
                             <Plus className="w-3 h-3" />
                             追问一层
                           </button>
                           <button
-                            onClick={() => handleAdjustDifficulty(point.id, 'harder')}
+                            onClick={() => handleAdjustDifficulty(q.id, 'harder')}
                             className="flex items-center gap-1 px-2 py-1 text-xs text-orange-600 hover:bg-orange-50 rounded transition-colors"
                           >
                             <HelpCircle className="w-3 h-3" />
@@ -378,7 +397,7 @@ export default function InterviewOutlinePanel({
       <div className="px-4 py-2 border-t border-gray-200 bg-gray-50">
         <div className="flex items-center justify-between">
           <span className="text-xs text-gray-500">
-            共 {outline.examinationPoints.length} 个考察点
+            共 {outline.recommendedQuestions.length} 个推荐问题
           </span>
           <span className="text-xs text-blue-600">AI 生成</span>
         </div>

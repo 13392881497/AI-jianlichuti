@@ -6,8 +6,8 @@ export interface InterviewOutline {
   status: 'generating' | 'generated' | 'edited';
   // Tab 1: 摘要
   summary: InterviewSummary;
-  // Tab 2: 考察点
-  examinationPoints: ExaminationPoint[];
+  // Tab 2: 推荐考察问题
+  recommendedQuestions: RecommendedQuestion[];
   createdAt: string;
   updatedAt: string;
 }
@@ -33,8 +33,15 @@ export interface ResumeHighlight {
   verificationNote?: string;
 }
 
-// Tab 2: 考察点
-export interface ExaminationPoint {
+// 问题标签
+export interface QuestionTag {
+  id: string;
+  label: string;
+  color: 'blue' | 'green' | 'orange' | 'purple' | 'red' | 'gray';
+}
+
+// Tab 2: 推荐考察问题
+export interface RecommendedQuestion {
   id: string;
   // 题目编号：如 Q1.1, Q1.2
   questionNumber: string;
@@ -54,6 +61,8 @@ export interface ExaminationPoint {
   goodAnswerCriteria: string[];
   // 注水信号（答得不好的表现）
   redFlags: string[];
+  // 标签列表（如字节范、技术能力等）
+  tags: QuestionTag[];
 }
 
 export interface Interview {
